@@ -36,7 +36,7 @@ pipeline {
                     -Dsonar.sources=. ^
                     -Dsonar.host.url=http://localhost:9000 ^
                     -Dsonar.login=sqp_baaff8a47fedc789c0684ef1da4a806c21d2375
-                    
+                    '''
                 }
             }
         }
