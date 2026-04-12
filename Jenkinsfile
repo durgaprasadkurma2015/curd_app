@@ -22,8 +22,7 @@ pipeline {
         stage('Build Backend') {
             steps {
                 dir('backend') {
-                    bat 'mvn clean package -DskipTests'
-					bat 'mvn clean compile'
+                   bat 'mvn clean install -DskipTests'
                 }
             }
         }
@@ -31,9 +30,11 @@ pipeline {
         stage('Build + SonarQube Analysis') {
             steps {
 			dir('backend'){
-                withSonarQubeEnv('SonarQube') {
-				bat 'mvn clean verify sonar:sonar'
-                  }
+                 bat """
+                    mvn clean verify sonar:sonar ^
+                    -Dsonar.projectKey=%SONAR_PROJECT_KEY% ^
+                    -Dsonar.token=%SONAR_AUTH_TOKEN%
+                """
                 }
             }
         }
