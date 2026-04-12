@@ -27,17 +27,20 @@ pipeline {
             }
         }
 
-        stage('Build + SonarQube Analysis') {
-            steps {
-			dir('backend'){
-                 bat """
+       stage('Build + SonarQube Analysis') {
+    steps {
+        dir('backend') {
+            withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
+                bat """
                     mvn clean verify sonar:sonar ^
-                    -Dsonar.projectKey=%SONAR_PROJECT_KEY% ^
-                    -Dsonar.token=%SONAR_AUTH_TOKEN%
+                    -Dsonar.projectKey=curd_app ^
+                    -Dsonar.host.url=http://localhost:9000 ^
+                    -Dsonar.token=%SONAR_TOKEN%
                 """
-                }
             }
         }
+    }
+}
 
         stage('Quality Gate') {
             steps {
