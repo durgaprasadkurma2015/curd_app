@@ -27,16 +27,18 @@ pipeline {
             }
         }
 
-       stage('Build + SonarQube Analysis') {
+      stage('Build + SonarQube Analysis') {
     steps {
         dir('backend') {
-            withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
-                bat """
-                    mvn clean verify sonar:sonar ^
-                    -Dsonar.projectKey=curd_app ^
-                    -Dsonar.host.url=http://localhost:9000 ^
-                    -Dsonar.token=%SONAR_TOKEN%
-                """
+            withSonarQubeEnv('SonarQube') {
+                withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
+                    bat """
+                        mvn clean verify sonar:sonar ^
+                        -Dsonar.projectKey=curd_app ^
+                        -Dsonar.host.url=http://localhost:9000 ^
+                        -Dsonar.token=%SONAR_TOKEN%
+                    """
+                }
             }
         }
     }
