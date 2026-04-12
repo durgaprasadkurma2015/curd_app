@@ -30,10 +30,10 @@ pipeline {
 
         stage('Build + SonarQube Analysis') {
             steps {
-			
+			dir('backend'){
                 withSonarQubeEnv('SonarQube') {
 				bat 'mvn clean verify sonar:sonar'
-                  
+                  }
                 }
             }
         }
