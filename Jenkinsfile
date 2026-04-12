@@ -8,11 +8,23 @@ pipeline {
 
     stages {
 
+        stage('Checkout Code') {
+            steps {
+                git branch: 'main', url: 'https://github.com/durgaprasadkurma2015/curd_app.git'
+            }
+        }
+
         stage('Build Backend') {
             steps {
                 dir('backend') {
-                    bat 'mvn clean install'
+                    bat 'mvn clean package -DskipTests'
                 }
+            }
+        }
+
+        stage('Verify Backend Build') {
+            steps {
+                bat 'dir backend\\target'
             }
         }
 
@@ -25,10 +37,20 @@ pipeline {
             }
         }
 
-        stage('Run Application') {
+        stage('Archive Build (Optional)') {
             steps {
-                bat 'java -jar backend\\target\\*.jar'
+                archiveArtifacts artifacts: '**/target/*.jar', fingerprint: true
             }
+        }
+
+    }
+
+    post {
+        success {
+            echo "BUILD SUCCESS ✅"
+        }
+        failure {
+            echo "BUILD FAILED ❌ Check logs"
         }
     }
 }
