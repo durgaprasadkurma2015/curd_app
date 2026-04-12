@@ -28,16 +28,12 @@ pipeline {
             }
         }
 
-        stage('SonarQube Analysis') {
+        stage('Build + SonarQube Analysis') {
             steps {
+			
                 withSonarQubeEnv('SonarQube') {
-                    bat """
-                    sonar-scanner ^
-                    -Dsonar.projectKey=curd_app ^
-                    -Dsonar.sources=. ^
-                    -Dsonar.host.url=http://localhost:9000 ^
-                    -Dsonar.token=sqp_28cc4f90c055397a3f9fb0e759187a21377f0a2c
-                    """
+				bat 'mvn clean verify sonar:sonar'
+                  
                 }
             }
         }
