@@ -33,7 +33,6 @@ pipeline {
 			dir('backend'){
                 withSonarQubeEnv('SonarQube') {
 				bat 'mvn clean verify sonar:sonar'
-				-Dsonar.projectKey=curd_app
                   }
                 }
             }
