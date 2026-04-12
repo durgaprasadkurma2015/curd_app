@@ -3,11 +3,11 @@ pipeline {
 
     tools {
         maven 'Maven3'
-        nodejs 'NodeJS18'
+        nodejs 'NodeJS'
     }
 
     environment {
-        SONAR_PROJECT_KEY = 'my-project'
+        SONAR_PROJECT_KEY = 'curd_app'
     }
 
     stages {
@@ -15,14 +15,14 @@ pipeline {
         stage('Checkout Code') {
             steps {
                 git branch: 'main',
-                url: 'https://github.com/durgapresakura1915/cart.p'
+                url: 'https://github.com/durgaprasadkurma2015/curd_app.git'
             }
         }
 
         stage('Build Backend') {
             steps {
                 dir('backend') {
-                    sh 'mvn clean package -DskipTests'
+                    bat 'mvn clean package -DskipTests'
                 }
             }
         }
@@ -30,12 +30,12 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv('SonarQube') {
-                    sh '''
+                    bat '''
                     sonar-scanner \
-                    -Dsonar.projectKey=my-project \
+                    -Dsonar.projectKey=curd_app \
                     -Dsonar.sources=. \
-                    -Dsonar.host.url=http://localhost:9000 \
-                    -Dsonar.login=YOUR_TOKEN
+                    -Dsonar.host.url=http://192.168.0.100:9000 \
+                    -Dsonar.login=sqp_baaff8a47fedc789c0684ef1da4a806c21d2375
                     '''
                 }
             }
@@ -52,8 +52,8 @@ pipeline {
         stage('Build Frontend') {
             steps {
                 dir('frontend') {
-                    sh 'npm install'
-                    sh 'npm run build'
+                    bat 'npm install'
+                    bat 'npm run build'
                 }
             }
         }
@@ -67,10 +67,10 @@ pipeline {
 
     post {
         success {
-            echo 'BUILD SUCCESS'
+            echo 'BUILD SUCCESS ✅'
         }
         failure {
-            echo 'BUILD FAILED - Check logs'
+            echo 'BUILD FAILED ❌- Check logs'
         }
     }
 }
