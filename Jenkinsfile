@@ -8,16 +8,10 @@ pipeline {
 
     stages {
 
-        stage('Clone Code') {
-            steps {
-                echo "Cloning code..."
-            }
-        }
-
         stage('Build Backend') {
             steps {
                 dir('backend') {
-                    sh 'mvn clean install'
+                    bat 'mvn clean install'
                 }
             }
         }
@@ -25,15 +19,15 @@ pipeline {
         stage('Build Frontend') {
             steps {
                 dir('frontend') {
-                    sh 'npm install'
-                    sh 'npm run build'
+                    bat 'npm install'
+                    bat 'npm run build'
                 }
             }
         }
 
         stage('Run Application') {
             steps {
-                sh 'java -jar backend/target/*.jar &'
+                bat 'java -jar backend\\target\\*.jar'
             }
         }
     }
