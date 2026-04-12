@@ -23,6 +23,7 @@ pipeline {
             steps {
                 dir('backend') {
                     bat 'mvn clean package -DskipTests'
+					bat 'mvn clean compile'
                 }
             }
         }
