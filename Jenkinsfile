@@ -22,35 +22,35 @@ pipeline {
         stage('Build Backend') {
             steps {
                 dir('backend') {
-                   bat 'mvn clean install -DskipTests'
+                    bat 'mvn clean install -DskipTests'
                 }
             }
         }
 
-      stage('Build + SonarQube Analysis') {
-    steps {
-        dir('backend') {
-            withSonarQubeEnv('SonarQube') {
-                withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
-                    bat """
-                        mvn clean verify sonar:sonar ^
-                        -Dsonar.projectKey=curd_app ^
-                        -Dsonar.host.url=http://localhost:9000 ^
-                        -Dsonar.token=%SONAR_TOKEN%
-                    """
+        stage('Build + SonarQube Analysis') {
+            steps {
+                dir('backend') {
+                    withSonarQubeEnv('SonarQube') {
+                        withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
+                            bat """
+                                mvn clean verify sonar:sonar ^
+                                -Dsonar.projectKey=curd_app ^
+                                -Dsonar.host.url=http://localhost:9000 ^
+                                -Dsonar.token=%SONAR_TOKEN%
+                            """
+                        }
+                    }
                 }
             }
         }
-    }
-}
 
         stage('Quality Gate') {
-    steps {
-        timeout(time: 15, unit: 'MINUTES') {
-            waitForQualityGate abortPipeline: false
+            steps {
+                timeout(time: 15, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: false
+                }
+            }
         }
-    }
-}
 
         stage('Build Frontend') {
             steps {
@@ -61,9 +61,26 @@ pipeline {
             }
         }
 
+        stage('Deploy to Nexus') {
+            steps {
+                dir('backend') {
+                    withCredentials([usernamePassword(credentialsId: 'nexus-creds',
+                        usernameVariable: 'NEXUS_USER',
+                        passwordVariable: 'NEXUS_PASS')]) {
+
+                        bat """
+                            mvn deploy ^
+                            -Dusername=%NEXUS_USER% ^
+                            -Dpassword=%NEXUS_PASS%
+                        """
+                    }
+                }
+            }
+        }
+
         stage('Archive Artifacts') {
             steps {
-                archiveArtifacts artifacts: '**/target/*.jar', fingerprint: false
+                archiveArtifacts artifacts: '**/target/*.jar', fingerprint: true
             }
         }
     }
@@ -73,7 +90,7 @@ pipeline {
             echo 'BUILD SUCCESS ✅'
         }
         failure {
-            echo 'BUILD FAILED ❌- Check logs'
+            echo 'BUILD FAILED ❌ Check logs'
         }
     }
 }

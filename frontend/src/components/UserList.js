@@ -5,9 +5,16 @@ function UserList({ onEdit, refreshKey }) {
 
   const [users, setUsers] = useState([]);
 
+  // useEffect(() => {
+  //   getUsers().then(res => setUsers(res.data));
+  // }, [refreshKey]);
+
   useEffect(() => {
-    getUsers().then(res => setUsers(res.data));
-  }, [refreshKey]);
+  getUsers().then(res => {
+    const data = res.data;
+    setUsers(Array.isArray(data) ? data : data.content || data.data || []);
+  });
+}, [refreshKey]);
 
   return (
     <table className="table table-bordered">
@@ -31,39 +38,50 @@ function UserList({ onEdit, refreshKey }) {
       </thead>
 
       <tbody>
-        {users.map(user => (
-          <tr key={user.id}>
-            <td>{user.id}</td>
-            <td>{user.firstName}</td>
-            <td>{user.lastName}</td>
-            <td>{user.age}</td>
-            <td>{user.gender}</td>
-            <td>{user.dateOfBirth}</td>
-            <td>{user.mobileNumber}</td>
-            <td>{user.address}</td>
-            <td>{user.district}</td>
-            <td>{user.state}</td>
-            <td>{user.country}</td>
-            <td>{user.email}</td>
-            <td>{user.city}</td>
-            <td>
-              <button
-                className="btn btn-warning btn-sm me-2"
-                onClick={() => onEdit(user)}>
-                Update
-              </button>
+        {Array.isArray(users) && users.length > 0 ? (
+          users.map(user => (
+            <tr key={user.id}>
+              <td>{user.id}</td>
+              <td>{user.firstName}</td>
+              <td>{user.lastName}</td>
+              <td>{user.age}</td>
+              <td>{user.gender}</td>
+              <td>{user.dateOfBirth}</td>
+              <td>{user.mobileNumber}</td>
+              <td>{user.address}</td>
+              <td>{user.district}</td>
+              <td>{user.state}</td>
+              <td>{user.country}</td>
+              <td>{user.email}</td>
+              <td>{user.city}</td>
+              <td>
+                <button
+                  className="btn btn-warning btn-sm me-2"
+                  onClick={() => onEdit(user)}
+                >
+                  Update
+                </button>
 
-              <button
-                className="btn btn-danger btn-sm"
-                onClick={() => deleteUser(user.id).then(() => setUsers(
-                  users.filter(u => u.id !== user.id)
-                ))}
-              >
-                Delete
-              </button>
+                <button
+                  className="btn btn-danger btn-sm"
+                  onClick={() =>
+                    deleteUser(user.id).then(() =>
+                      setUsers(users.filter(u => u.id !== user.id))
+                    )
+                  }
+                >
+                  Delete
+                </button>
+              </td>
+            </tr>
+          ))
+        ) : (
+          <tr>
+            <td colSpan="14" className="text-center">
+              No data found
             </td>
           </tr>
-        ))}
+        )}
       </tbody>
     </table>
   );
