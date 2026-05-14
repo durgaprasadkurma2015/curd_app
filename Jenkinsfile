@@ -59,25 +59,12 @@ pipeline {
         }
 
         stage('Deploy to Nexus') {
-            steps {
-                dir('backend') {
-                    withCredentials([
-                        usernamePassword(
-                            credentialsId: 'nexus-creds',
-                            usernameVariable: 'NEXUS_USER',
-                            passwordVariable: 'NEXUS_PASS'
-                        )
-                    ]) {
-
-                        bat """
-                            mvn deploy ^
-                            -Dusername=%NEXUS_USER% ^
-                            -Dpassword=%NEXUS_PASS%
-                        """
-                    }
-                }
-            }
+    steps {
+        dir('backend') {
+            bat 'mvn deploy'
         }
+    }
+}
 
         stage('Archive Artifacts') {
             steps {
