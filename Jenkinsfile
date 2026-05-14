@@ -134,9 +134,10 @@ pipeline {
         }
 
 
-        stage('Test Docker') {
+stage('Check Docker') {
     steps {
-        bat "\"C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe\" --version"
+        bat 'docker version'
+        bat 'docker ps'
     }
 }
         
