@@ -212,16 +212,13 @@ stage('Check Docker') {
         // =========================
 
         stage('Deploy to Kubernetes') {
-
-            steps {
-
-                dir('k8s') {
-
-                    bat 'kubectl apply -f backend/'
-                    bat 'kubectl apply -f frontend/'
-                }
-            }
+    steps {
+        dir('k8s') {
+            bat 'dir'
+            bat 'kubectl apply -f .'
         }
+    }
+}
 
         // =========================
         // ARCHIVE ARTIFACTS
