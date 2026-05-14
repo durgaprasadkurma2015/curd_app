@@ -8,6 +8,7 @@ pipeline {
 
     environment {
         SONAR_PROJECT_KEY = 'curd_app'
+        SONAR_ORG = 'durgaprasadkurma2015'
     }
 
     stages {
@@ -22,32 +23,28 @@ pipeline {
         stage('Build Backend') {
             steps {
                 dir('backend') {
-                    bat 'mvn clean install -DskipTests'
+                    bat 'mvn clean package -DskipTests'
                 }
             }
         }
 
-        stage('Build + SonarQube Analysis') {
+        stage('SonarCloud Analysis') {
             steps {
                 dir('backend') {
-                    withSonarQubeEnv('SonarQube') {
-                        withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
-                            bat """
-                                mvn clean verify sonar:sonar ^
-                                -Dsonar.projectKey=curd_app ^
-                                -Dsonar.host.url=http://localhost:9000 ^
-                                -Dsonar.token=%SONAR_TOKEN%
-                            """
-                        }
-                    }
-                }
-            }
-        }
 
-        stage('Quality Gate') {
-            steps {
-                timeout(time: 15, unit: 'MINUTES') {
-                    waitForQualityGate abortPipeline: false
+                    withCredentials([
+                        string(credentialsId: 'SonarqubeCloud-token',
+                        variable: 'SONAR_TOKEN')
+                    ]) {
+
+                        bat """
+                            mvn verify sonar:sonar ^
+                            -Dsonar.projectKey=%SONAR_PROJECT_KEY% ^
+                            -Dsonar.organization=%SONAR_ORG% ^
+                            -Dsonar.host.url=https://sonarcloud.io ^
+                            -Dsonar.token=%SONAR_TOKEN%
+                        """
+                    }
                 }
             }
         }
@@ -64,9 +61,13 @@ pipeline {
         stage('Deploy to Nexus') {
             steps {
                 dir('backend') {
-                    withCredentials([usernamePassword(credentialsId: 'nexus-creds',
-                        usernameVariable: 'NEXUS_USER',
-                        passwordVariable: 'NEXUS_PASS')]) {
+                    withCredentials([
+                        usernamePassword(
+                            credentialsId: 'nexus-creds',
+                            usernameVariable: 'NEXUS_USER',
+                            passwordVariable: 'NEXUS_PASS'
+                        )
+                    ]) {
 
                         bat """
                             mvn deploy ^
@@ -80,7 +81,8 @@ pipeline {
 
         stage('Archive Artifacts') {
             steps {
-                archiveArtifacts artifacts: '**/target/*.jar', fingerprint: true
+                archiveArtifacts artifacts: '**/target/*.jar',
+                fingerprint: true
             }
         }
     }
@@ -89,6 +91,7 @@ pipeline {
         success {
             echo 'BUILD SUCCESS ✅'
         }
+
         failure {
             echo 'BUILD FAILED ❌ Check logs'
         }
