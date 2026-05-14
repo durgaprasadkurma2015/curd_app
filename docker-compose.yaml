@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+
+  backend:
+    build: ./springboot-app
+    ports:
+      - "9876:8080"
+
+  frontend:
+    build: ./react-app
+    ports:
+      - "1234:80"
+    depends_on:
+      - backend
