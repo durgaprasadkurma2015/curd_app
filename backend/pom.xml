@@ -27,7 +27,7 @@
 		<url/>
 	</scm>
 	<properties>
-		<java.version>21</java.version>
+		<java.version>25</java.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -105,6 +105,10 @@
         <id>maven-releases</id>
         <url>http://localhost:8081/repository/maven-releases/</url>
     </repository>
+    <snapshotRepository>
+        <id>maven-snapshots</id>
+        <url>http://localhost:8081/repository/maven-snapshots/</url>
+    </snapshotRepository>
 </distributionManagement>
 	<build>
 		<plugins>
@@ -117,7 +121,7 @@
     <plugin>
             <groupId>org.jacoco</groupId>
             <artifactId>jacoco-maven-plugin</artifactId>
-            <version>0.8.11</version>
+            <version>0.8.14</version>
 
             <executions>
                 <!-- Attach JaCoCo agent -->
