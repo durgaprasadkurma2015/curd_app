@@ -211,11 +211,10 @@ stage('Check Docker') {
         // KUBERNETES DEPLOYMENT
         // =========================
 
-        stage('Deploy to Kubernetes') {
+stage('Deploy to Kubernetes') {
     steps {
         dir('k8s') {
-            bat 'dir'
-            bat 'kubectl apply -f .'
+            bat 'kubectl apply -R -f .'
         }
     }
 }
