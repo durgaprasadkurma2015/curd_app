@@ -136,7 +136,7 @@ pipeline {
 
         stage('Test Docker') {
     steps {
-        bat 'docker --version'
+        bat "\"C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe\" --version"
     }
 }
         
