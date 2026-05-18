@@ -36,10 +36,8 @@ public class UserService {
     
 
     public User patchUpdate(Long id, Map<String, Object> updates) {
-
         User user = repo.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found with id " + id));
-
         updates.forEach((key, value) -> {
             try {
                 Field field = User.class.getDeclaredField(key);
@@ -49,9 +47,6 @@ public class UserService {
                 throw new RuntimeException("Invalid field: " + key);
             }
         });
-
         return repo.save(user);
     }
-
-
 }
