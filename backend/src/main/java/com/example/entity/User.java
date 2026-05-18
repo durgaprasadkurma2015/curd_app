@@ -92,6 +92,7 @@ public class User {
 	public void setCountry(String country) {
 		this.country = country;
 	}
+	
 	private String firstName;
     private String lastName;
     private int age;
