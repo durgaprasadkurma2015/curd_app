@@ -1,7 +1,9 @@
 pipeline {
 
     agent any
-
+triggers {
+    githubPush()
+}
     tools {
         maven 'Maven'
         nodejs 'NodeJS'
