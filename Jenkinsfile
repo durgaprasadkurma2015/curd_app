@@ -1,7 +1,9 @@
 pipeline {
 
     agent any
-
+triggers {
+    githubPush()
+}
     tools {
         maven 'Maven'
         nodejs 'NodeJS'
@@ -218,6 +220,7 @@ stage('Deploy to Kubernetes') {
 }
     }
 }
+
 
         // =========================
         // ARCHIVE ARTIFACTS
