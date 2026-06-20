@@ -1,9 +1,11 @@
 pipeline {
-
     agent any
-triggers {
-    githubPush()
-}
+    
+        triggers {
+        githubPush()
+    }
+
+    
     tools {
         maven 'Maven'
         nodejs 'NodeJS'
@@ -11,13 +13,13 @@ triggers {
 
     environment {
 
-        // =========================
+         // =========================
         // SONARCLOUD
         // =========================
 
         SONAR_PROJECT_KEY = 'curd_app'
         SONAR_ORG = 'durgaprasadkurma2015'
-
+        
         // =========================
         // DOCKER
         // =========================
