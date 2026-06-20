@@ -13,8 +13,7 @@ import com.example.entity.User;
 import com.example.service.UserService;
 
 @RestController
-    //@CrossOrigin(origins = "http://localhost:1234")
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "http://localhost:1234")
 @RequestMapping("/api/users")
 public class UserController {
 
