@@ -12,6 +12,14 @@ pipeline {
     }
 
     environment {
+
+           // =========================
+        // SONARCLOUD
+        // =========================
+
+        SONAR_PROJECT_KEY = 'curd_app'
+        SONAR_ORG = 'durgaprasadkurma2015'
+        
         // =========================
         // DOCKER
         // =========================
@@ -74,8 +82,8 @@ pipeline {
 
                         bat """
                             mvn verify sonar:sonar ^
-                            -Dsonar.projectKey=curd_app ^
-                            -Dsonar.organization=durgaprasadkurma2015 ^
+                            -Dsonar.projectKey=%SONAR_PROJECT_KEY% ^
+                            -Dsonar.organization=%SONAR_ORG% ^
                             -Dsonar.host.url=https://sonarcloud.io ^
                             -Dsonar.token=%SONAR_TOKEN%
                         """
