@@ -71,8 +71,8 @@ pipeline {
 
                         bat """
                             mvn verify sonar:sonar ^
-                            -Dsonar.projectKey=%SONAR_PROJECT_KEY% ^
-                            -Dsonar.organization=%SONAR_ORG% ^
+                            -Dsonar.projectKey=curd_app ^
+                            -Dsonar.organization=durgaprasadkurma2015 ^
                             -Dsonar.host.url=https://sonarcloud.io ^
                             -Dsonar.token=%SONAR_TOKEN%
                         """
